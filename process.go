@@ -1,10 +1,15 @@
 package main
 
-import "os"
+import (
+	"fmt"
+	"log"
+	"os"
+)
 
+// Process is a thread with a process identifier, a queue of incoming messages, and an "environment" that keeps track of all proceses and queues
 type Process struct {
-	inbox []string
-	env   string
+	inbox []string // TODO make this a slice of type funcs which are go-routines
+	env   Environment
 	id    int
 }
 
@@ -15,8 +20,9 @@ func (p *Process) run() {
 
 	// Remove the completed process from env, based on the ID
 
+	p.env.removeProc(p.id)
 	if err != nil {
-		os.Exit(1)
+		log.Fatal("Exiting")
 	}
 }
 
@@ -26,11 +32,8 @@ func (p *Process) getNextMessage() string {
 
 func (p *Process) sendMessage(dest, msg string) {
 	// Call the env with the intended dest and the msg
-
 }
 
-// func (p *Process) deliver(msg string) error {
-// 	append(p.inbox, msg)
-
-// 	return p.index[0]
-// }
+func (p *Process) deliver(msg string) {
+	append(p.inbox, msg)
+}
